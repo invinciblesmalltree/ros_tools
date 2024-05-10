@@ -9,7 +9,7 @@
                 "/opt/ros/noetic/include/**",
                 "/usr/include/**",
                 "/opt/ros/noetic/include",
-                "${workspaceFolder}/catkin_ws/devel/include"
+                "${workspaceFolder}/devel/include"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

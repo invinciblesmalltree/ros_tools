@@ -1,5 +1,5 @@
 #include <geometry_msgs/PoseStamped.h>
-#include <lidar_data/LidarPose.h>
+#include <ros_tools/LidarPose.h>
 #include <ros/ros.h>
 #include <tf/tf.h>
 
@@ -11,7 +11,7 @@ class PoseDataNode {
 
     PoseDataNode() {
         // 初始化发布者，发布 LidarPose 消息
-        pose_pub = nh.advertise<lidar_data::LidarPose>("lidar_data", 10);
+        pose_pub = nh.advertise<ros_tools::LidarPose>("lidar_data", 10);
         ROS_INFO("LidarPose Pub");
         // 初始化订阅者，订阅 PoseStamped 消息
         ROS_INFO("LidarPose Sub");
@@ -42,7 +42,7 @@ class PoseDataNode {
             yaw += 2 * M_PI;
 
         // 创建并填充 LidarPose 消息
-        lidar_data::LidarPose output;
+        ros_tools::LidarPose output;
         output.x = x;
         output.y = y;
         output.z = z;

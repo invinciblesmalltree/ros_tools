@@ -11,7 +11,6 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     geometry_msgs
     tf
-    lidar_data
 )
 
 ## System dependencies are found with CMake's conventions
@@ -54,6 +53,11 @@ find_package(catkin REQUIRED COMPONENTS
 #   Message2.msg
 # )
 
+add_message_files(
+    FILES
+    LidarPose.msg
+)
+
 ## Generate services in the 'srv' folder
 # add_service_files(
 #   FILES
@@ -73,6 +77,11 @@ find_package(catkin REQUIRED COMPONENTS
 #   DEPENDENCIES
 #   std_msgs  # Or other packages containing msgs
 # )
+
+generate_messages(
+    DEPENDENCIES
+    std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -108,7 +117,7 @@ catkin_package(
 #  LIBRARIES ros_tools
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
-    CATKIN_DEPENDS roscpp geometry_msgs tf lidar_data
+    CATKIN_DEPENDS roscpp geometry_msgs tf
 )
 
 ###########

@@ -1,4 +1,4 @@
-#include <lidar_data/LidarPose.h>
+#include <ros_tools/LidarPose.h>
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
 #include <tf/tf.h>
@@ -11,7 +11,7 @@ class LidarDataNode {
 
     LidarDataNode() {
         // 初始化发布者，发布 LidarPose 消息
-        data_pub = nh.advertise<lidar_data::LidarPose>("lidar_data", 10);
+        data_pub = nh.advertise<ros_tools::LidarPose>("lidar_data", 10);
         // 初始化订阅者，订阅 Odometry 消息
         odom_sub =
             nh.subscribe("/Odometry", 10, &LidarDataNode::odomCallback, this);
@@ -40,7 +40,7 @@ class LidarDataNode {
             yaw += 2 * M_PI;
 
         // 创建并填充 LidarPose 消息
-        lidar_data::LidarPose output;
+        ros_tools::LidarPose output;
         output.x = x;
         output.y = y;
         output.z = z;

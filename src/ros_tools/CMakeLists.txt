@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(lidar_data)
+project(ros_tools)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -11,6 +11,15 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     std_msgs
     message_generation
+    geometry_msgs
+    sensor_msgs
+    mavros
+    nav_msgs
+    std_msgs
+    std_srvs
+    tf2_ros
+    tf2_eigen
+    mavros_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -112,7 +121,7 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES lidar_data
+#  LIBRARIES ros_tools
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
     CATKIN_DEPENDS message_runtime std_msgs roscpp
@@ -131,7 +140,7 @@ ${catkin_INCLUDE_DIRS}
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/lidar_data.cpp
+#   src/${PROJECT_NAME}/ros_tools.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -213,6 +222,11 @@ target_link_libraries(lidar_data_node ${catkin_LIBRARIES})
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
+
+link_directories(
+    lib
+    ${catkin_LIB_DIRS}
+)
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

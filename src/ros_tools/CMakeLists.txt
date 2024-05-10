@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(pose_data)
+project(ros_tools)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -105,7 +105,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES pose_data
+#  LIBRARIES ros_tools
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
     CATKIN_DEPENDS roscpp geometry_msgs tf lidar_data
@@ -124,7 +124,7 @@ ${catkin_INCLUDE_DIRS}
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/pose_data.cpp
+#   src/${PROJECT_NAME}/ros_tools.cpp
 # )
 
 ## Add cmake target dependencies of the library

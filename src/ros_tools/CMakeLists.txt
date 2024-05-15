@@ -9,6 +9,7 @@ project(ros_tools)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
     roscpp
+    rospy
     std_msgs
     message_generation
     geometry_msgs
@@ -20,6 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
     tf2_ros
     tf2_eigen
     mavros_msgs
+    cv_bridge
 )
 
 ## System dependencies are found with CMake's conventions
@@ -124,7 +126,7 @@ catkin_package(
 #  LIBRARIES ros_tools
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
-    CATKIN_DEPENDS message_runtime std_msgs roscpp
+    CATKIN_DEPENDS message_runtime std_msgs sensor_msgs roscpp rospy cv_bridge
 )
 
 ###########
@@ -184,6 +186,10 @@ target_link_libraries(lidar_data_node ${catkin_LIBRARIES})
 #   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
+
+catkin_install_python(PROGRAMS scripts/d435_node.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html

@@ -52,9 +52,15 @@
   <build_depend>message_generation</build_depend>
   <exec_depend>message_runtime</exec_depend>
   <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
   <depend>roscpp</depend>
+  <depend>rospy</depend>
   <depend>geometry_msgs</depend>
   <depend>tf</depend>
+  <depend>cv_bridge</depend>
+
+  <build_depend>python3</build_depend>
+  <exec_depend>python3</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

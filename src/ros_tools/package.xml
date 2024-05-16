@@ -59,8 +59,7 @@
   <depend>tf</depend>
   <depend>cv_bridge</depend>
 
-  <build_depend>python3</build_depend>
-  <exec_depend>python3</exec_depend>
+  <depend>python3</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

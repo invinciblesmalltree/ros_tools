@@ -187,7 +187,9 @@ target_link_libraries(lidar_data_node ${catkin_LIBRARIES})
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
-catkin_install_python(PROGRAMS scripts/d435_node.py
+catkin_install_python(
+  PROGRAMS scripts/d435_node.py
+           scripts/ground_camera_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

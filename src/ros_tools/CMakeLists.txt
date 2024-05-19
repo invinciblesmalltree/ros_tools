@@ -117,6 +117,7 @@ catkin_package(
 #  LIBRARIES ros_tools
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
+    INCLUDE_DIRS include
     CATKIN_DEPENDS roscpp geometry_msgs tf
 )
 
@@ -197,6 +198,10 @@ target_link_libraries(pose_data_node ${catkin_LIBRARIES})
 #   FILES_MATCHING PATTERN "*.h"
 #   PATTERN ".svn" EXCLUDE
 # )
+install(DIRECTORY include/${PROJECT_NAME}/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+    FILES_MATCHING PATTERN "*.hpp"
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES

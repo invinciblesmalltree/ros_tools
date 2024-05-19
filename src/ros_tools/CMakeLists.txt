@@ -126,6 +126,7 @@ catkin_package(
 #  LIBRARIES ros_tools
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
+    INCLUDE_DIRS include
     CATKIN_DEPENDS message_runtime std_msgs sensor_msgs roscpp rospy cv_bridge
 )
 
@@ -213,6 +214,10 @@ catkin_install_python(
 #   FILES_MATCHING PATTERN "*.h"
 #   PATTERN ".svn" EXCLUDE
 # )
+install(DIRECTORY include/${PROJECT_NAME}/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+    FILES_MATCHING PATTERN "*.hpp"
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES

@@ -119,7 +119,7 @@ class CameraNode(QWidget):
         self.video_writer = cv2.VideoWriter(
             filename,
             cv2.VideoWriter_fourcc(*"mp4v"),
-            20,
+            30,
             (self.image.shape[1], self.image.shape[0]),
         )
         self.recording = True

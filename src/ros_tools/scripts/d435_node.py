@@ -10,8 +10,8 @@ import numpy as np
 def main():
     rospy.init_node("d435_node", anonymous=True)
 
-    rgb_pub = rospy.Publisher("/d435/rgb", Image, queue_size=10)
-    depth_pub = rospy.Publisher("/d435/depth", Image, queue_size=10)
+    rgb_pub = rospy.Publisher("/d435/rgb", Image, queue_size=1)
+    depth_pub = rospy.Publisher("/d435/depth", Image, queue_size=1)
 
     pipeline = rs.pipeline()
     config = rs.config()

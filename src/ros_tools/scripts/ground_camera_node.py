@@ -10,7 +10,7 @@ def ground_camera_node():
     rospy.init_node("ground_camera_node", anonymous=True)
 
     # Create a publisher for the camera topic
-    camera_pub = rospy.Publisher("/camera/ground", Image, queue_size=10)
+    camera_pub = rospy.Publisher("/camera/ground", Image, queue_size=1)
 
     # Create a CvBridge object
     bridge = CvBridge()

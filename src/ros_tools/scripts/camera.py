@@ -29,11 +29,12 @@ class CameraNode(QWidget):
         self.video_counter = 1
         self.display_width = 640
         self.display_height = 480
+        self.frame_rate = 30  # 设置帧率为30
 
         rospy.init_node("camera_node", anonymous=True)
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
-        self.timer.start(30)
+        self.timer.start(int(1000 / self.frame_rate))  # 定时器的间隔与帧率匹配
 
         self.initUI()
 
@@ -119,7 +120,7 @@ class CameraNode(QWidget):
         self.video_writer = cv2.VideoWriter(
             filename,
             cv2.VideoWriter_fourcc(*"mp4v"),
-            30,
+            self.frame_rate,
             (self.image.shape[1], self.image.shape[0]),
         )
         self.recording = True

@@ -3,6 +3,7 @@ import sys
 import cv2
 import os
 import rospy
+import time
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 from PyQt5.QtWidgets import (
@@ -13,6 +14,7 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QWidget,
     QComboBox,
+    QLineEdit,
 )
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QImage, QPixmap, QFont
@@ -29,14 +31,13 @@ class CameraNode(QWidget):
         self.video_counter = 1
         self.display_width = 640
         self.display_height = 480
-        self.frame_rate = 30  # 设置帧率为30
+        self.frame_rate = 30  # 默认帧率为30
+        self.initUI()
 
         rospy.init_node("camera_node", anonymous=True)
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
         self.timer.start(int(1000 / self.frame_rate))  # 定时器的间隔与帧率匹配
-
-        self.initUI()
 
     def initUI(self):
         self.label = QLabel(self)
@@ -50,19 +51,29 @@ class CameraNode(QWidget):
         self.topic_selector.activated[str].connect(self.change_topic)
         self.topic_selector.showPopup = self.update_topics  # 重新定义showPopup方法
 
+        self.frame_rate_input = QLineEdit(self)
+        self.frame_rate_input.setText("30")  # 默认输入值为30
+        self.frame_rate_input.setFont(QFont("Noto Sans CJK SC", 12))  # 设置中文字体
+        self.frame_rate_input.setFixedWidth(120)
+
         self.record_button = QPushButton("开始录制", self)
         self.record_button.setFont(QFont("Noto Sans CJK SC", 12))  # 设置中文字体
         self.record_button.setCheckable(True)
         self.record_button.clicked.connect(self.toggle_recording)
 
         vbox = QVBoxLayout()
-        hbox = QHBoxLayout()
-        hbox.addStretch(1)
-        hbox.addWidget(self.label)
-        hbox.addStretch(1)
+        hbox_label = QHBoxLayout()
+        hbox_label.addStretch(1)
+        hbox_label.addWidget(self.label)
+        hbox_label.addStretch(1)
+
+        hbox_bottom = QHBoxLayout()
+        hbox_bottom.addWidget(self.frame_rate_input)
+        hbox_bottom.addWidget(self.record_button)
+
         vbox.addWidget(self.topic_selector)
-        vbox.addLayout(hbox)
-        vbox.addWidget(self.record_button)
+        vbox.addLayout(hbox_label)
+        vbox.addLayout(hbox_bottom)
 
         self.setLayout(vbox)
         self.setWindowTitle("相机节点")
@@ -102,7 +113,10 @@ class CameraNode(QWidget):
             ).rgbSwapped()
             self.label.setPixmap(QPixmap.fromImage(qImg))
             if self.recording:
-                self.video_writer.write(self.image)
+                current_time = time.time()
+                if (current_time - self.start_time) >= (1.0 / self.frame_rate):
+                    self.video_writer.write(self.image)
+                    self.start_time = current_time
 
     def toggle_recording(self):
         if self.record_button.isChecked():
@@ -113,6 +127,10 @@ class CameraNode(QWidget):
             self.stop_recording()
 
     def start_recording(self):
+        try:
+            self.frame_rate = int(self.frame_rate_input.text())
+        except ValueError:
+            self.frame_rate = 30  # 使用默认帧率30
         filename = f"video_{self.video_counter}.mp4"
         while os.path.exists(filename):
             self.video_counter += 1
@@ -124,6 +142,7 @@ class CameraNode(QWidget):
             (self.image.shape[1], self.image.shape[0]),
         )
         self.recording = True
+        self.start_time = time.time()
 
     def stop_recording(self):
         self.recording = False

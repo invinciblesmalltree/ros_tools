@@ -156,6 +156,7 @@ ${catkin_INCLUDE_DIRS}
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/lidar_data_node.cpp)
 add_executable(lidar_data_node src/lidar_data_node.cpp)
+add_executable(ground_camera_node src/ground_camera_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -194,7 +195,6 @@ catkin_install_python(PROGRAMS
 
 catkin_install_python(
   PROGRAMS scripts/d435_node.py
-           scripts/ground_camera_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

@@ -160,6 +160,7 @@ ${OpenCV_INCLUDE_DIRS}
 # add_executable(${PROJECT_NAME}_node src/lidar_data_node.cpp)
 add_executable(lidar_data_node src/lidar_data_node.cpp)
 add_executable(ground_camera_node src/ground_camera_node.cpp)
+add_executable(d435_node src/d435_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -185,6 +186,11 @@ ${catkin_LIBRARIES}
 ${OpenCV_LIBRARIES}
 )
 
+target_link_libraries(d435_node
+${catkin_LIBRARIES}
+${OpenCV_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############
@@ -201,11 +207,6 @@ ${OpenCV_LIBRARIES}
 catkin_install_python(PROGRAMS
     scripts/camera.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-catkin_install_python(
-  PROGRAMS scripts/d435_node.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 ## Mark executables for installation

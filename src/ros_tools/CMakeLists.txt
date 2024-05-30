@@ -24,6 +24,7 @@ find_package(catkin REQUIRED COMPONENTS
     cv_bridge
 )
 
+find_package(realsense2 REQUIRED)
 find_package(OpenCV REQUIRED)
 
 ## System dependencies are found with CMake's conventions
@@ -141,6 +142,7 @@ catkin_package(
 include_directories(
 # include
 ${catkin_INCLUDE_DIRS}
+${realsense2_INCLUDE_DIRS}
 ${OpenCV_INCLUDE_DIRS}
 )
 
@@ -188,6 +190,7 @@ ${OpenCV_LIBRARIES}
 
 target_link_libraries(d435_node
 ${catkin_LIBRARIES}
+${realsense2_LIBRARY}
 ${OpenCV_LIBRARIES}
 )
 

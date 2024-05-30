@@ -13,37 +13,30 @@ int main(int argc, char **argv) {
         nh.advertise<sensor_msgs::Image>("/camera/ground", 10);
 
     // 打开摄像头设备
-    cv::VideoCapture ground_camera("/dev/ground");
+    cv::VideoCapture ground_camera("/dev/ground", cv::CAP_V4L2);
     if (!ground_camera.isOpened()) {
-        ROS_ERROR("Unable to open ground camera!");
+        ROS_ERROR("无法打开摄像头");
         return -1;
     }
 
     // 设置摄像头分辨率
     ground_camera.set(cv::CAP_PROP_FRAME_WIDTH, 640);
     ground_camera.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+    ground_camera.set(cv::CAP_PROP_FPS, 30);
 
-    // 设置发布频率为30Hz
-    ros::Rate rate(30);
+    cv::Mat frame;
+    cv_bridge::CvImage cv_image;
+    cv_image.encoding = "bgr8";
 
     // 主循环
     while (ros::ok()) {
-        cv::Mat frame;
-        bool ret = ground_camera.read(frame);
-
-        if (ret) {
-            // 转换帧为ROS图像消息
-            cv_bridge::CvImage cv_image;
-            cv_image.image = frame;
-            cv_image.encoding = "bgr8";
-            sensor_msgs::Image ros_image;
-            cv_image.toImageMsg(ros_image);
-
-            // 发布图像消息
-            camera_pub.publish(ros_image);
-        }
-
-        rate.sleep();
+        ground_camera >> frame;
+        // 转换帧为ROS图像消息
+        cv_image.image = frame;
+        sensor_msgs::Image ros_image;
+        cv_image.toImageMsg(ros_image);
+        // 发布图像消息
+        camera_pub.publish(ros_image);
     }
 
     // 释放摄像头

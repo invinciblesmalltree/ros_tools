@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
 
     // 创建发布器
     ros::Publisher camera_pub =
-        nh.advertise<sensor_msgs::Image>("/camera/ground", 10);
+        nh.advertise<sensor_msgs::Image>("/camera/ground", 1);
 
     // 打开摄像头设备
     cv::VideoCapture ground_camera("/dev/ground", cv::CAP_V4L2);

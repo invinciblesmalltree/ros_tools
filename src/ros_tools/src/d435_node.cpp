@@ -25,7 +25,6 @@ int main(int argc, char **argv) {
     cv_ptr_rgb->encoding = sensor_msgs::image_encodings::BGR8;
     cv_ptr_depth->encoding = sensor_msgs::image_encodings::TYPE_16UC1;
 
-    ros::Rate loop_rate(10);
     while (ros::ok()) {
         rs2::frameset frames = pipe.wait_for_frames();
         rs2::frame color_frame = frames.get_color_frame();
@@ -49,7 +48,6 @@ int main(int argc, char **argv) {
         depth_pub.publish(depth_msg);
 
         ros::spinOnce();
-        loop_rate.sleep();
     }
 
     pipe.stop();

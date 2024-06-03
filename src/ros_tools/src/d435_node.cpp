@@ -14,8 +14,8 @@ int main(int argc, char **argv) {
 
     rs2::pipeline pipe;
     rs2::config cfg;
-    cfg.enable_stream(RS2_STREAM_COLOR, 1280, 720, RS2_FORMAT_BGR8, 30);
-    cfg.enable_stream(RS2_STREAM_DEPTH, 1280, 720, RS2_FORMAT_Z16, 30);
+    cfg.enable_stream(RS2_STREAM_COLOR, 640, 480, RS2_FORMAT_BGR8, 30);
+    cfg.enable_stream(RS2_STREAM_DEPTH, 640, 480, RS2_FORMAT_Z16, 10);
 
     rs2::pipeline_profile selection = pipe.start(cfg);
 
@@ -33,9 +33,9 @@ int main(int argc, char **argv) {
         if (!color_frame || !depth_frame)
             continue;
 
-        cv::Mat color_image(cv::Size(1280, 720), CV_8UC3,
+        cv::Mat color_image(cv::Size(640, 480), CV_8UC3,
                             (void *)color_frame.get_data(), cv::Mat::AUTO_STEP);
-        cv::Mat depth_image(cv::Size(1280, 720), CV_16UC1,
+        cv::Mat depth_image(cv::Size(640, 480), CV_16UC1,
                             (void *)depth_frame.get_data(), cv::Mat::AUTO_STEP);
 
         cv_ptr_rgb->image = color_image;

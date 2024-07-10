@@ -4,6 +4,8 @@ import cv2
 import os
 import rospy
 import time
+import threading
+import numpy as np
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 from PyQt5.QtWidgets import (
@@ -29,9 +31,11 @@ class CameraNode(QWidget):
         self.recording = False
         self.video_writer = None
         self.video_counter = 1
+        self.photo_counter = 1
         self.display_width = 640
         self.display_height = 480
         self.frame_rate = 30  # 默认帧率为30
+        self.recording_thread = None
         self.initUI()
 
         rospy.init_node("camera_node", anonymous=True)
@@ -61,6 +65,10 @@ class CameraNode(QWidget):
         self.record_button.setCheckable(True)
         self.record_button.clicked.connect(self.toggle_recording)
 
+        self.photo_button = QPushButton("拍照", self)
+        self.photo_button.setFont(QFont("Noto Sans CJK SC", 12))  # 设置中文字体
+        self.photo_button.clicked.connect(self.take_photo)
+
         vbox = QVBoxLayout()
         hbox_label = QHBoxLayout()
         hbox_label.addStretch(1)
@@ -70,6 +78,7 @@ class CameraNode(QWidget):
         hbox_bottom = QHBoxLayout()
         hbox_bottom.addWidget(self.frame_rate_input)
         hbox_bottom.addWidget(self.record_button)
+        hbox_bottom.addWidget(self.photo_button)
 
         vbox.addWidget(self.topic_selector)
         vbox.addLayout(hbox_label)
@@ -97,7 +106,15 @@ class CameraNode(QWidget):
 
     def image_callback(self, data):
         try:
-            self.image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+            if data.encoding == "32FC1":
+                cv_image = self.bridge.imgmsg_to_cv2(data, "32FC1")
+                cv_image = np.nan_to_num(cv_image, nan=0.0)
+                normalized_image = cv2.normalize(
+                    cv_image, None, 0, 255, cv2.NORM_MINMAX
+                )
+                self.image = cv2.convertScaleAbs(normalized_image)
+            else:
+                self.image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:
             print(e)
 
@@ -106,17 +123,24 @@ class CameraNode(QWidget):
             resized_image = cv2.resize(
                 self.image, (self.display_width, self.display_height)
             )
-            height, width, channel = resized_image.shape
-            bytes_per_line = 3 * width
-            qImg = QImage(
-                resized_image.data, width, height, bytes_per_line, QImage.Format_RGB888
-            ).rgbSwapped()
+            if len(resized_image.shape) == 2:  # 如果是灰度图像
+                qImg = QImage(
+                    resized_image.data,
+                    resized_image.shape[1],
+                    resized_image.shape[0],
+                    QImage.Format_Grayscale8,
+                )
+            else:  # 如果是彩色图像
+                height, width, channel = resized_image.shape
+                bytes_per_line = 3 * width
+                qImg = QImage(
+                    resized_image.data,
+                    width,
+                    height,
+                    bytes_per_line,
+                    QImage.Format_RGB888,
+                ).rgbSwapped()
             self.label.setPixmap(QPixmap.fromImage(qImg))
-            if self.recording:
-                current_time = time.time()
-                if (current_time - self.start_time) >= (1.0 / self.frame_rate):
-                    self.video_writer.write(self.image)
-                    self.start_time = current_time
 
     def toggle_recording(self):
         if self.record_button.isChecked():
@@ -142,14 +166,32 @@ class CameraNode(QWidget):
             (self.image.shape[1], self.image.shape[0]),
         )
         self.recording = True
-        self.start_time = time.time()
+        self.recording_thread = threading.Thread(target=self.record_video)
+        self.recording_thread.start()
 
     def stop_recording(self):
         self.recording = False
+        if self.recording_thread:
+            self.recording_thread.join()
         if self.video_writer:
             self.video_writer.release()
         self.video_writer = None
         self.video_counter += 1
+
+    def record_video(self):
+        while self.recording:
+            if self.image is not None:
+                self.video_writer.write(self.image)
+            time.sleep(1.0 / self.frame_rate)
+
+    def take_photo(self):
+        if self.image is not None:
+            filename = f"photo_{self.photo_counter}.png"
+            while os.path.exists(filename):
+                self.photo_counter += 1
+                filename = f"photo_{self.photo_counter}.png"
+            cv2.imwrite(filename, self.image)
+            self.photo_counter += 1
 
 
 if __name__ == "__main__":

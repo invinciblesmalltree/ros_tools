@@ -37,6 +37,13 @@ class target {
     bool pos_check(ros_tools::LidarPose &lidar_pose_data) {
         return reached || pos_check(lidar_pose_data, 0.1);
     }
+
+    bool pos_check(ros_tools::LidarPose &lidar_pose_data, double distance_x,
+                   double distance_y, double distance_z) {
+        return reached || pos_check(lidar_pose_data, sqrt(pow(distance_x, 2) +
+                                                          pow(distance_y, 2) +
+                                                          pow(distance_z, 2)));
+    }
 };
 
 #endif // ROS_TOOLS_TARGET_CLASS_HPP

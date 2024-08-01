@@ -31,8 +31,8 @@ class target {
         return reached ||
                (reached = sqrt(pow(lidar_pose_data.x - x, 2) +
                                pow(lidar_pose_data.y - y, 2) +
-                               pow(lidar_pose_data.z - z, 2)) < distance) &&
-                   abs(lidar_pose_data.yaw - yaw) < 0.2;
+                               pow(lidar_pose_data.z - z, 2)) < distance &&
+                          abs(lidar_pose_data.yaw - yaw) < 0.2);
     }
 
     bool pos_check(ros_tools::LidarPose &lidar_pose_data) {
@@ -43,8 +43,8 @@ class target {
                    double distance_y, double distance_z) {
         return reached || (reached = abs(lidar_pose_data.x - x) < distance_x &&
                                      abs(lidar_pose_data.y - y) < distance_y &&
-                                     abs(lidar_pose_data.z - z) < distance_z) &&
-                              abs(lidar_pose_data.yaw - yaw) < 0.2;
+                                     abs(lidar_pose_data.z - z) < distance_z &&
+                                     abs(lidar_pose_data.yaw - yaw) < 0.2);
     }
 };
 
